@@ -10,6 +10,14 @@ import { ContactSection } from '@/sections/home/ContactSection';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { localBusinessJsonLd } from '@/lib/structured-data';
 import { siteConfig } from '@/lib/site';
+import { assetExists } from '@/lib/assets';
+
+/**
+ * Image de fond du hero. Pour changer de format, modifie UNIQUEMENT cette
+ * constante (ex. '/images/hero.webp' ou '/images/hero.png'). Si le fichier
+ * n'existe pas, le hero retombe automatiquement sur son dégradé espresso.
+ */
+const HERO_IMAGE = '/images/hero.jpg';
 
 export const metadata: Metadata = {
   title: `${siteConfig.legalName} — Décoratrice d'intérieur à Bordeaux`,
@@ -26,7 +34,7 @@ export default function HomePage() {
     <>
       <JsonLd data={localBusinessJsonLd()} />
       <main id="contenu">
-        <Hero />
+        <Hero image={assetExists(HERO_IMAGE) ? HERO_IMAGE : undefined} />
         <TrustSection />
         <PresentationSection />
         <RealisationsSection />

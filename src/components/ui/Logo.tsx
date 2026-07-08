@@ -23,7 +23,7 @@ export function Logo({ className, label = "Amélie Déco, retour à l'accueil" }
         className,
       )}
     >
-      <span className="font-medium">Amélie</span>
+      <span className="font-medium">Amélie MEGDAD</span>
       <span className="text-[0.7em] uppercase tracking-[0.3em] text-accent">
         {siteConfig.address.region}
       </span>
