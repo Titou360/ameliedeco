@@ -26,6 +26,10 @@ export interface Realisation {
   /** Chemin image (public/) — placeholder si absent. */
   image?: string;
   year: number;
+  /** Description longue (page détail) — vide tant que non fournie. */
+  description?: string;
+  /** Galerie (chemins public/) — placeholders si vide. */
+  gallery?: string[];
 }
 
 export const realisations: Realisation[] = [
@@ -84,3 +88,11 @@ export const realisations: Realisation[] = [
     year: 2023,
   },
 ];
+
+export function getAllRealisations(): Realisation[] {
+  return realisations;
+}
+
+export function getRealisation(slug: string): Realisation | undefined {
+  return realisations.find((r) => r.slug === slug);
+}
