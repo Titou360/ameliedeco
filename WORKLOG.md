@@ -1,7 +1,7 @@
 # Journal de bord — Refonte site Amélie Déco
 
 > Ce fichier trace l'avancement pour **reprendre le travail où il en était**.
-> Mis à jour à la fin de chaque étape. Dernière mise à jour : **2026-07-08**.
+> Mis à jour à la fin de chaque étape. Dernière mise à jour : **2026-07-09**.
 
 ## Contexte
 
@@ -25,7 +25,7 @@ contenu réels extraits de l'ancien site `ameliedeco.com` (voir mémoire projet)
 | 5 | Homepage — Réalisations (portfolio + filtres) + Processus | ✅ terminé |
 | 6 | Homepage — Avis clients + Zone d'intervention + Contact | ✅ terminé |
 | 7 | Intro immersive Three.js (R3F) légère | ⚪ à faire |
-| 8 | Pages internes : Prestations, Réalisations, À propos, Blog | ⚪ à faire |
+| 8 | Pages internes : Prestations, Réalisations, À propos, Blog | ✅ terminé |
 | 9 | SEO local complet : sitemap, robots, JSON-LD LocalBusiness/ProfessionalService | ⚪ à faire |
 | 10 | Vérifications finales : TS, Lighthouse, WCAG AA, responsive, reduced-motion | ⚪ à faire |
 
@@ -89,15 +89,33 @@ Légende : ✅ terminé · 🟡 en cours · ⚪ à faire
 - JSON-LD `ProfessionalService` injecté sur l'accueil.
 - **Vérif OK :** `typecheck` 0 erreur, `build` succès (home 161 kB First Load JS).
 
+### 2026-07-09 — Étape 8 : pages internes complètes + vérification finale
+
+- Pages livrées (toutes pré-rendues statiques en production) :
+  - `/prestations` — liste des 6 prestations réelles avec `PageHero` et `Breadcrumbs`.
+  - `/prestations/[slug]` — 6 params générés (`generateStaticParams`) : conseil-deco,
+    projet-deco-amenagement-3d, relooking-interieur, home-staging, shopping-accompagne,
+    conseil-couleurs. Détail prestation + JSON-LD `Service` par page.
+  - `/realisations` — galerie filtrée (`RealisationsGallery`) + `PageHero` + `Breadcrumbs`.
+  - `/realisations/[slug]` — 6 params : appartement-lumiere-bordeaux,
+    maison-familiale-merignac, cuisine-chaleureuse-pessac, + 3 autres. JSON-LD `ItemPage`.
+  - `/a-propos` — bio réelle, portrait, valeurs, CTA.
+  - `/blog` — archi SEO prête, liste d'articles.
+  - `/contact` — formulaire complet (même composant que homepage).
+  - `/mentions-legales` et `/confidentialite` — pages légales statiques.
+- Composants partagés créés : `PageHero`, `Breadcrumbs`, `RealisationsGallery`.
+- Métadonnées `generateMetadata` + JSON-LD par page sur toutes les routes.
+- Câblage conditionnel de l'image hero dans `src/app/page.tsx` (`assetExists`).
+- **Vérif build OK :** 24 pages pré-rendues (○ statiques + ● SSG), 0 erreur TypeScript.
+- **Vérif anti-404 :** tous les liens de nav, footer et hero résolvent vers une `page.tsx`
+  existante — aucune route manquante.
+
 ## Prochaine action à la reprise
 1. Étape 7 — Intro Three.js (R3F + Drei) légère : installer `three`,
    `@react-three/fiber@^9`, `@react-three/drei@^10` (isolé), scène minimaliste
    (pièce/lumière), dynamic import + fallback, coupée en reduced-motion.
-2. Étape 8 — Pages internes : Prestations, Réalisations (+ [slug]), À propos,
-   Blog (archi SEO), Contact, mentions légales, confidentialité. Ajouter le
-   décalage header (padding top) sur pages sans hero sombre.
-3. Étape 9 — SEO : `app/sitemap.ts`, `app/robots.ts`, `opengraph-image`,
+2. Étape 9 — SEO : `app/sitemap.ts`, `app/robots.ts`, `opengraph-image`,
    JSON-LD par page + breadcrumb, favicons.
-4. Étape 10 — Vérifs finales : Lighthouse (100 visé), axe a11y, responsive.
+3. Étape 10 — Vérifs finales : Lighthouse (100 visé), axe a11y, responsive.
 - Rappel : npm/next **via PowerShell** avec `NODE_EXTRA_CA_CERTS` (persisté).
 - Assets à fournir par la cliente : photos hero + réalisations + portrait.
