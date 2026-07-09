@@ -3,6 +3,8 @@
  * Génère les graphes LocalBusiness / ProfessionalService injectés dans les pages.
  */
 import { siteConfig, serviceAreas } from './site';
+import type { Service } from './services';
+import type { Realisation } from './realisations';
 
 /** URL absolue à partir d'un chemin relatif. */
 export function absoluteUrl(path = '/'): string {
@@ -66,5 +68,32 @@ export function breadcrumbJsonLd(items: { name: string; path: string }[]) {
       name: item.name,
       item: absoluteUrl(item.path),
     })),
+  } as const;
+}
+
+/** JSON-LD Service pour une page prestation. */
+export function serviceJsonLd(service: Service) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: service.title,
+    description: service.description,
+    url: absoluteUrl(`/prestations/${service.slug}`),
+    serviceType: service.title,
+    provider: { '@id': `${siteConfig.url}/#business` },
+    areaServed: serviceAreas.map((city) => ({ '@type': 'City', name: city })),
+  } as const;
+}
+
+/** JSON-LD CreativeWork léger pour une page réalisation. */
+export function realisationJsonLd(r: Realisation) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: r.title,
+    url: absoluteUrl(`/realisations/${r.slug}`),
+    creator: { '@id': `${siteConfig.url}/#business` },
+    locationCreated: { '@type': 'Place', name: r.city },
+    about: r.projectType,
   } as const;
 }

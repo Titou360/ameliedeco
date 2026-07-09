@@ -10,10 +10,7 @@ import { Button } from '@/components/ui/Button';
  */
 export default function NotFound() {
   return (
-    <main
-      id="contenu"
-      className="flex min-h-svh flex-col items-center justify-center bg-background px-6 pb-20 pt-32 text-center"
-    >
+    <div className="flex min-h-svh flex-col items-center justify-center bg-background px-6 pb-20 pt-32 text-center">
       <Container size="narrow">
         <p className="font-sans text-sm uppercase tracking-[0.28em] text-accent">Erreur 404</p>
         <h1 className="mt-6 font-display text-5xl leading-tight sm:text-7xl">
@@ -37,6 +34,6 @@ export default function NotFound() {
           </Button>
         </div>
       </Container>
-    </main>
+    </div>
   );
 }
