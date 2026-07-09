@@ -33,16 +33,14 @@ export default function HomePage() {
   return (
     <>
       <JsonLd data={localBusinessJsonLd()} />
-      <main id="contenu">
-        <Hero image={assetExists(HERO_IMAGE) ? HERO_IMAGE : undefined} />
-        <TrustSection />
-        <PresentationSection />
-        <RealisationsSection />
-        <ProcessSection />
-        <TestimonialsSection />
-        <ServiceAreaSection />
-        <ContactSection />
-      </main>
+      <Hero image={assetExists(HERO_IMAGE) ? HERO_IMAGE : undefined} />
+      <TrustSection />
+      <PresentationSection />
+      <RealisationsSection />
+      <ProcessSection />
+      <TestimonialsSection />
+      <ServiceAreaSection />
+      <ContactSection />
     </>
   );
 }

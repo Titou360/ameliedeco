@@ -97,7 +97,7 @@ export default function RootLayout({
         </a>
         <AppProviders>
           <Header />
-          {children}
+          <main id="contenu">{children}</main>
           <Footer />
         </AppProviders>
       </body>
