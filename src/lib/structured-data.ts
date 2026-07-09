@@ -25,7 +25,7 @@ export function localBusinessJsonLd() {
     description: siteConfig.description,
     url: siteConfig.url,
     email: siteConfig.email,
-    ...(siteConfig.phone ? { telephone: siteConfig.phone } : {}),
+    ...(siteConfig.phoneHref ? { telephone: siteConfig.phoneHref } : {}),
     image: absoluteUrl('/opengraph-image'),
     priceRange: '€€',
     address: {

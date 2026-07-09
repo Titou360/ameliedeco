@@ -114,12 +114,7 @@ export function Hero({ image }: HeroProps) {
           <Button href={primaryCta.href} size="lg">
             {primaryCta.label}
           </Button>
-          <Button
-            href="/realisations"
-            size="lg"
-            variant="outline"
-            className="border-cream/40 text-cream hover:bg-cream/10"
-          >
+          <Button href="/realisations" size="lg" variant="outlineOnDark">
             Voir les réalisations
             <ArrowUpRight
               size={18}

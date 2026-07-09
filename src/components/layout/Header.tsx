@@ -63,9 +63,11 @@ export function Header({ transparentOnTop }: HeaderProps) {
     <header
       className={cn(
         'fixed inset-x-0 top-0 z-50 transition-colors duration-500',
-        solid
-          ? 'border-b border-border/70 bg-background/85 backdrop-blur-md'
-          : 'border-b border-transparent bg-transparent',
+        open
+          ? 'bg-background'
+          : solid
+            ? 'border-b border-border/70 bg-background/85 backdrop-blur-md'
+            : 'border-b border-transparent bg-transparent',
       )}
     >
       <div className="mx-auto flex h-18 max-w-360 items-center justify-between px-6 sm:px-8 lg:px-12">
@@ -101,7 +103,7 @@ export function Header({ transparentOnTop }: HeaderProps) {
 
         <div className="flex items-center gap-3">
           <div className="hidden lg:block">
-            <Button href={primaryCta.href} size="sm" variant={solid ? 'primary' : 'outline'}>
+            <Button href={primaryCta.href} size="sm" variant={solid ? 'primary' : 'outlineOnDark'}>
               {primaryCta.label}
             </Button>
           </div>
