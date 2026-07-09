@@ -15,8 +15,9 @@ export const siteConfig = {
   url: 'https://www.ameliedeco.com',
   locale: 'fr_FR',
   email: 'Amelie.megdad@gmail.com',
-  // Téléphone non confirmé (les numéros du site actuel sont générés). À compléter.
-  phone: '',
+  // Téléphone (affichage FR) + version internationale pour les liens tel:.
+  phone: '06 47 47 64 32',
+  phoneHref: '+33647476432',
   address: {
     locality: 'Virelade',
     region: 'Gironde',

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
-import { Mail, MapPin, Clock, Instagram, Facebook, Check } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Check } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { Section } from '@/components/ui/Section';
 import { Button } from '@/components/ui/Button';
@@ -83,6 +83,15 @@ export function ContactSection() {
                 </a>
               </li>
               <li className="flex items-start gap-3">
+                <Phone size={18} strokeWidth={1.5} className="mt-0.5 text-accent" aria-hidden="true" />
+                <a
+                  href={`tel:${siteConfig.phoneHref}`}
+                  className="font-sans text-sm text-foreground transition-colors hover:text-accent"
+                >
+                  {siteConfig.phone}
+                </a>
+              </li>
+              <li className="flex items-start gap-3">
                 <MapPin size={18} strokeWidth={1.5} className="mt-0.5 text-accent" aria-hidden="true" />
                 <span className="font-sans text-sm text-foreground">
                   {siteConfig.address.locality} ({siteConfig.address.postalCode}),{' '}
@@ -101,27 +110,6 @@ export function ContactSection() {
                 </ul>
               </li>
             </ul>
-
-            <div className="mt-8 flex gap-3">
-              <a
-                href={siteConfig.socials.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram d'Amélie Déco"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-border transition-colors hover:bg-sand-50"
-              >
-                <Instagram size={18} strokeWidth={1.5} />
-              </a>
-              <a
-                href={siteConfig.socials.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook d'Amélie Déco"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-border transition-colors hover:bg-sand-50"
-              >
-                <Facebook size={18} strokeWidth={1.5} />
-              </a>
-            </div>
           </div>
 
           {/* Colonne formulaire */}

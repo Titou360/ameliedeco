@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { cn } from '@/utils/cn';
 
-type Variant = 'primary' | 'outline' | 'ghost';
+type Variant = 'primary' | 'outline' | 'ghost' | 'outlineOnDark';
 type Size = 'sm' | 'md' | 'lg';
 
 const base =
@@ -16,6 +16,9 @@ const variants: Record<Variant, string> = {
   primary: 'bg-espresso text-cream shadow-soft hover:shadow-lift',
   outline: 'border border-border bg-transparent text-foreground hover:bg-sand-50',
   ghost: 'bg-transparent text-foreground hover:bg-sand-50',
+  // Contour clair pour fonds sombres (hero, header transparent) : texte crème
+  // visible au repos, remplissage crème + texte espresso au survol.
+  outlineOnDark: 'border border-cream/60 bg-transparent text-cream hover:bg-cream hover:text-espresso',
 };
 
 const sizes: Record<Size, string> = {

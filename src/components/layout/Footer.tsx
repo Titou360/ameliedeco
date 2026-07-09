@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Instagram, Facebook, Mail } from 'lucide-react';
+import { Instagram, Facebook, Mail, Phone } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { siteConfig, mainNav, serviceAreas } from '@/lib/site';
 
@@ -95,6 +95,13 @@ export function Footer() {
             >
               <Mail size={16} strokeWidth={1.5} />
               <span className="break-all">{siteConfig.email}</span>
+            </a>
+            <a
+              href={`tel:${siteConfig.phoneHref}`}
+              className="mt-3 inline-flex items-center gap-2 font-sans text-sm text-foreground/90 transition-colors hover:text-accent"
+            >
+              <Phone size={16} strokeWidth={1.5} />
+              <span>{siteConfig.phone}</span>
             </a>
           </div>
         </div>

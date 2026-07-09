@@ -3,18 +3,24 @@ import { Section } from '@/components/ui/Section';
 import { Figure } from '@/components/ui/Figure';
 import { Button } from '@/components/ui/Button';
 import { Reveal } from '@/animations/Reveal';
+import { assetExists } from '@/lib/assets';
+
+// Portrait affiché s'il a été déposé (sinon placeholder chaud).
+const PORTRAIT = '/images/a-propos/portrait-amelie.jpg';
 
 /**
  * Section de présentation d'Amélie : portrait + récit (contenu réel, reconversion
  * « de la passion à la profession »). Texte et image révélés au scroll.
  */
 export function PresentationSection() {
+  const portrait = assetExists(PORTRAIT) ? PORTRAIT : undefined;
   return (
     <Section tone="sand" spacing="lg" aria-labelledby="presentation-title">
       <Container size="wide">
         <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
           <Reveal direction="right" className="lg:col-span-5">
             <Figure
+              src={portrait}
               ratio="portrait"
               alt="Portrait d'Amélie Megdad, décoratrice d'intérieur"
               sizes="(max-width: 1024px) 100vw, 40vw"
