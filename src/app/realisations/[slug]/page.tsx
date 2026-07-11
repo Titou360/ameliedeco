@@ -6,11 +6,15 @@ import { Button } from '@/components/ui/Button';
 import { Figure } from '@/components/ui/Figure';
 import { PageHero } from '@/components/ui/PageHero';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { realisations, getRealisation } from '@/lib/realisations';
+import { getPublishedRealisationSlugs, getRealisationBySlug } from '@/lib/db/realisations';
 import { realisationJsonLd } from '@/lib/structured-data';
 
-export function generateStaticParams() {
-  return realisations.map((r) => ({ slug: r.slug }));
+export const revalidate = 60;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const slugs = await getPublishedRealisationSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -19,7 +23,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const r = getRealisation(slug);
+  const r = await getRealisationBySlug(slug);
   if (!r) return {};
   return {
     title: `${r.title} — ${r.city}`,
@@ -34,10 +38,9 @@ export default async function RealisationPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const r = getRealisation(slug);
+  const r = await getRealisationBySlug(slug);
   if (!r) notFound();
 
-  // Galerie : images fournies, sinon 3 emplacements placeholder.
   const gallery = r.gallery && r.gallery.length > 0 ? r.gallery : [undefined, undefined, undefined];
 
   const meta = [

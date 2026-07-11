@@ -3,7 +3,9 @@ import { Container } from '@/components/ui/Container';
 import { Section } from '@/components/ui/Section';
 import { PageHero } from '@/components/ui/PageHero';
 import { RealisationsGallery } from '@/components/realisations/RealisationsGallery';
-import { getAllRealisations } from '@/lib/realisations';
+import { getPublishedRealisations } from '@/lib/db/realisations';
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Réalisations',
@@ -12,7 +14,9 @@ export const metadata: Metadata = {
   alternates: { canonical: '/realisations' },
 };
 
-export default function RealisationsPage() {
+export default async function RealisationsPage() {
+  const items = await getPublishedRealisations();
+
   return (
     <>
       <PageHero
@@ -26,7 +30,16 @@ export default function RealisationsPage() {
       />
       <Section tone="background" spacing="lg">
         <Container size="wide">
-          <RealisationsGallery items={getAllRealisations()} initialCount={6} step={6} paginate />
+          {items.length === 0 ? (
+            <div className="mx-auto max-w-xl rounded-xl border border-border bg-surface p-10 text-center sm:p-14">
+              <p className="font-display text-2xl">Les réalisations arrivent bientôt</p>
+              <p className="mx-auto mt-4 max-w-md font-sans text-base leading-relaxed text-muted">
+                Les premiers projets seront présentés ici très prochainement.
+              </p>
+            </div>
+          ) : (
+            <RealisationsGallery items={items} initialCount={6} step={6} paginate />
+          )}
         </Container>
       </Section>
     </>
