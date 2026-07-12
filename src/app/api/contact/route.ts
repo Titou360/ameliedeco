@@ -1,12 +1,11 @@
 import { NextResponse } from 'next/server';
+import { siteConfig } from '@/lib/site';
+import { sendEmail } from '@/lib/email/brevo';
+import { contactEmail } from '@/lib/email/templates';
 
 /**
- * Route handler du formulaire de contact.
- *
- * Valide les champs côté serveur puis renvoie une réponse JSON.
- * TODO (mise en production) : brancher un service d'e-mail (ex. Resend) pour
- * transmettre le message à {siteConfig.email}. Les identifiants iront dans les
- * variables d'environnement Vercel — aucun secret dans le code.
+ * Route handler du formulaire de contact : valide côté serveur puis envoie le
+ * message à l'adresse d'Amélie via Brevo. Honeypot anti-spam.
  */
 interface ContactPayload {
   name?: string;
@@ -43,8 +42,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ errors }, { status: 422 });
   }
 
-  // TODO : envoi de l'e-mail via un service tiers (Resend, etc.).
-  // await sendEmail({ to: siteConfig.email, ...data });
+  const sent = await sendEmail({
+    to: siteConfig.email,
+    subject: `Nouveau message${data.subject ? ` — ${data.subject}` : ''}`,
+    html: contactEmail({
+      name: data.name!.trim(),
+      email: data.email!.trim(),
+      phone: data.phone?.trim(),
+      subject: data.subject?.trim(),
+      message: data.message!.trim(),
+    }),
+  });
 
+  if (!sent) {
+    return NextResponse.json(
+      { error: "L'envoi a échoué. Merci de réessayer ou d'écrire directement par e-mail." },
+      { status: 502 },
+    );
+  }
   return NextResponse.json({ ok: true });
 }
