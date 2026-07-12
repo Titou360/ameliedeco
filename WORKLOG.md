@@ -1,7 +1,7 @@
 # Journal de bord — Refonte site Amélie Déco
 
 > Ce fichier trace l'avancement pour **reprendre le travail où il en était**.
-> Mis à jour à la fin de chaque étape. Dernière mise à jour : **2026-07-11**.
+> Mis à jour à la fin de chaque étape. Dernière mise à jour : **2026-07-12**.
 
 ## Contexte
 
@@ -142,6 +142,45 @@ dynamiques du site — sans dashboard ni authentification (sous-projets B→D à
 **Prochain sous-projet :** dashboard d'administration (authentification,
 CRUD réalisations et avis, upload photos) = sous-projets B→D.
 
+### 2026-07-12 — Sous-projet B terminé : authentification, protection /admin, flux mot de passe, emails Brevo, formulaire de contact branché
+
+**Périmètre :** couche d'administration complète sans CRUD ni upload (reportés en C et D).
+
+- **Auth.js v5 Credentials + JWT** (`auth.ts`, `auth.config.ts`) : split edge/Node,
+  session JWT uniquement (pas de base de sessions), hachage bcrypt (cost 12).
+- **Modèles Mongoose** (`lib/mongodb/models/user.ts`, `reset-token.ts`) : `User`
+  (email, passwordHash, role) + `ResetToken` (token haché, usage unique, TTL 1h).
+- **2 comptes seedés** depuis les variables d'environnement (`SEED_AMELIE_PASSWORD`,
+  `SEED_CLEMENT_PASSWORD`) via `npm run seed` (idempotent, upsert par email).
+- **Middleware** (`middleware.ts`) : protège toutes les routes `/admin/**`, redirige
+  vers `/login` si non authentifié ; redirige `/login` vers `/admin` si déjà connecté.
+- **Flux mot de passe oublié** (2 routes API + 2 pages) :
+  - `/api/password/forgot` : génère un token aléatoire haché (SHA-256), stocké en
+    Mongo avec TTL 1h ; réponse générique anti-énumération ; rate-limit léger.
+  - `/api/password/reset` : vérifie token + TTL + usage unique ; valide le nouveau
+    mot de passe (politique client checklist + serveur : 12 car., maj., min., chiffre,
+    spécial) ; marque le token consommé ; envoie l'email de confirmation.
+  - Pages `/mot-de-passe-oublie` et `/reinitialiser` (statiques, accessibles).
+- **Emails Brevo** (`lib/email/brevo.ts`) : `sendEmail()` retourne `false` sans lever
+  si `BREVO_API_KEY`/`BREVO_SENDER` absent — le build et l'UI ne cassent pas.
+  Templates : `resetLinkEmail`, `passwordChangedEmail`, `contactEmail`
+  (`lib/email/templates.ts`).
+- **Formulaire de contact branché** (`/api/contact`) : validation + honeypot conservés ;
+  envoi via `sendEmail` + `contactEmail` vers `siteConfig.email` ; retourne 502 si
+  `sendEmail` renvoie false.
+- **Coquille `/admin`** : page protégée par middleware, lien de déconnexion, `SiteChrome`.
+- **Build final** : 24 routes (dont `/login` ○, `/mot-de-passe-oublie` ○,
+  `/reinitialiser` ○, `/admin` ƒ, `/api/auth/[...nextauth]` ƒ, `/api/password/forgot` ƒ,
+  `/api/password/reset` ƒ, `/api/contact` ƒ). `typecheck` 0 erreur.
+
+**À faire avant mise en prod :**
+- Renseigner `BREVO_API_KEY` + expéditeur vérifié sur Brevo (`BREVO_SENDER`).
+- Exécuter `npm run seed` (après avoir renseigné les mots de passe dans `.env.local` et
+  Atlas joignable).
+- Ajouter `AUTH_SECRET`, `BREVO_API_KEY`, `BREVO_SENDER` dans les env vars Vercel.
+
+**Prochains sous-projets :** CRUD réalisations + avis = sous-projet C · Upload photos = sous-projet D.
+
 ## Prochaine action à la reprise
 1. Étape 7 — Intro Three.js (R3F + Drei) légère : installer `three`,
    `@react-three/fiber@^9`, `@react-three/drei@^10` (isolé), scène minimaliste
@@ -149,5 +188,7 @@ CRUD réalisations et avis, upload photos) = sous-projets B→D.
 2. Étape 9 — SEO : `app/sitemap.ts`, `app/robots.ts`, `opengraph-image`,
    JSON-LD par page + breadcrumb, favicons.
 3. Étape 10 — Vérifs finales : Lighthouse (100 visé), axe a11y, responsive.
+4. Sous-projet C — CRUD réalisations + avis (dashboard admin).
+5. Sous-projet D — Upload photos.
 - Rappel : npm/next **via PowerShell** avec `NODE_EXTRA_CA_CERTS` (persisté).
 - Assets à fournir par la cliente : photos hero + réalisations + portrait.
