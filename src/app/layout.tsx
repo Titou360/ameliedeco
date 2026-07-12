@@ -4,6 +4,7 @@ import { siteConfig } from '@/lib/site';
 import { AppProviders } from '@/components/providers/AppProviders';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { SiteChrome } from '@/components/layout/SiteChrome';
 import '@/styles/globals.css';
 
 /**
@@ -96,9 +97,9 @@ export default function RootLayout({
           Aller au contenu
         </a>
         <AppProviders>
-          <Header />
-          <main id="contenu">{children}</main>
-          <Footer />
+          <SiteChrome header={<Header />} footer={<Footer />}>
+            <main id="contenu">{children}</main>
+          </SiteChrome>
         </AppProviders>
       </body>
     </html>
