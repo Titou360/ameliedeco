@@ -12,6 +12,8 @@ import { localBusinessJsonLd } from '@/lib/structured-data';
 import { siteConfig } from '@/lib/site';
 import { assetExists } from '@/lib/assets';
 
+export const revalidate = 60;
+
 /**
  * Image de fond du hero. Pour changer de format, modifie UNIQUEMENT cette
  * constante (ex. '/images/hero.webp' ou '/images/hero.png'). Si le fichier

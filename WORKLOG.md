@@ -1,7 +1,7 @@
 # Journal de bord — Refonte site Amélie Déco
 
 > Ce fichier trace l'avancement pour **reprendre le travail où il en était**.
-> Mis à jour à la fin de chaque étape. Dernière mise à jour : **2026-07-09**.
+> Mis à jour à la fin de chaque étape. Dernière mise à jour : **2026-07-11**.
 
 ## Contexte
 
@@ -109,6 +109,38 @@ Légende : ✅ terminé · 🟡 en cours · ⚪ à faire
 - **Vérif build OK :** 24 pages pré-rendues (○ statiques + ● SSG), 0 erreur TypeScript.
 - **Vérif anti-404 :** tous les liens de nav, footer et hero résolvent vers une `page.tsx`
   existante — aucune route manquante.
+
+### 2026-07-11 — Sous-projet A terminé : lecture MongoDB (avis + réalisations) + ISR
+
+**Périmètre :** connexion MongoDB Atlas en lecture seule pour alimenter les sections
+dynamiques du site — sans dashboard ni authentification (sous-projets B→D à venir).
+
+- **Client MongoDB (`lib/mongodb/client.ts`)** : singleton `MongoClient` avec
+  `serverSelectionTimeoutMS: 3000`. Un seul appel `connect()` réutilisé entre
+  les Server Components.
+- **Repositories résilients (`lib/mongodb/realisations.ts`, `lib/mongodb/testimonials.ts`)** :
+  `getAllRealisations()` et `getAllTestimonials()` capturent toute erreur (Atlas
+  injoignable, timeout, collection absente) et retournent un tableau vide — le
+  build reste vert même sans base accessible.
+- **Page `/realisations` (`app/realisations/page.tsx`)** : lit la base avec
+  `getAllRealisations()` ; si le résultat est vide, affiche un message d'attente
+  au lieu d'une grille vide. `generateStaticParams` appelle le même repo : zéro
+  slug pré-rendu si la base est vide. `dynamicParams = false` bloque les slugs
+  inconnus.
+- **Section `TestimonialsSection`** : lit `getAllTestimonials()` côté serveur ;
+  si la liste est vide, la section est masquée (`null`) — pas de bloc vide visible.
+- **Suppression des données fictives** : `lib/realisations.ts` et
+  `lib/testimonials.ts` (données hardcodées) retirés du code de production ;
+  toutes les importations mises à jour pour pointer vers les repositories Mongo.
+- **ISR (`src/app/page.tsx`)** : `export const revalidate = 60` ajouté sur
+  l'accueil — le cache Next.js est invalidé toutes les 60 s, ce qui reflète
+  les nouveaux avis/réalisations ajoutés en base sans redéploiement.
+- **Build final** : 18 routes, `typecheck` 0 erreur. `/` et `/realisations`
+  affichent `Revalidate: 1m` dans la table des routes. Aucune route
+  `/realisations/[slug]` pré-rendue (base vide → build résilient = attendu).
+
+**Prochain sous-projet :** dashboard d'administration (authentification,
+CRUD réalisations et avis, upload photos) = sous-projets B→D.
 
 ## Prochaine action à la reprise
 1. Étape 7 — Intro Three.js (R3F + Drei) légère : installer `three`,

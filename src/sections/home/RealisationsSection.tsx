@@ -3,13 +3,16 @@ import { Section } from '@/components/ui/Section';
 import { Button } from '@/components/ui/Button';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { RealisationsGallery } from '@/components/realisations/RealisationsGallery';
-import { getAllRealisations } from '@/lib/realisations';
+import { getPublishedRealisations } from '@/lib/db/realisations';
 
 /**
  * Aperçu du portfolio sur la home : en-tête + grille filtrable (6 max) déléguée
- * à RealisationsGallery, avec lien vers la page Réalisations complète.
+ * à RealisationsGallery. Masquée s'il n'y a aucune réalisation publiée.
  */
-export function RealisationsSection() {
+export async function RealisationsSection() {
+  const items = await getPublishedRealisations();
+  if (items.length === 0) return null;
+
   return (
     <Section tone="background" spacing="lg" aria-labelledby="realisations-title">
       <Container size="wide">
@@ -28,7 +31,7 @@ export function RealisationsSection() {
         </div>
 
         <div className="mt-10">
-          <RealisationsGallery items={getAllRealisations()} initialCount={6} />
+          <RealisationsGallery items={items} initialCount={6} />
         </div>
 
         <div className="mt-12 lg:hidden">
